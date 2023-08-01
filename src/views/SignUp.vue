@@ -2,23 +2,61 @@
   <main class="mt-24 w-full flex flex-col items-center">
     <h1 class="font-semibold text-4xl">Sign Up</h1>
     <div class="w-5/12 min-w-[30rem]">
-      <form action="" class="flex flex-col items-center mt-10 w-full">
-        <input type="text" placeholder="Username*" class="input">
-        <input type="text" placeholder="Email*" class="input">
-        <input type="text" placeholder="Password*" class="input">
-        <input type="password" placeholder="Confirm Password*" class="input">
-        <button class="bg-blue-400 w-[5rem] px-2 py-1 rounded-sm text-white flex items-center justify-center">Sign Up</button>
+      <form @submit.prevent="FbSignUp" class="flex flex-col items-center mt-10 w-full">
+        <label v-if="FbError" class="text-red-400 select-none">AN ERROR HAS OCCURED</label>
+
+        <input type="text" placeholder="Username" v-model="username" class="input">
+        <input type="text" placeholder="Email*" v-model="email" class="input">
+        <input type="password" placeholder="Password*" v-model="password" class="input">
+        <input type="password" placeholder="Confirm Password*" v-model="confirmPassword" class="input">
+
+        <button class="bg-blue-400 w-[5rem] px-2 py-1 rounded-sm text-white flex items-center justify-center">Sign
+          Up</button>
       </form>
     </div>
   </main>
+  <!-- <p class="mt-24 mr-10">
+    {{ password }}, {{ confirmPassword }}
+  </p> -->
+  <p v-if="auth.currentUser" class="mt-24 mr-10">
+    {{ auth.currentUser.displayName }}
+  </p>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { auth } from '../firebase'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 
+
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const FbError = ref(false)
+
+function FbSignUp() {
+  if (password.value === confirmPassword.value && password.value !== '' && confirmPassword.value !== '') {
+    FbError.value = false;
+
+    createUserWithEmailAndPassword(auth, email.value, password.value)
+      .then((userCredential) => {
+        updateProfile(userCredential.user, {
+          displayName: username.value
+        })
+      })
+      .catch((error) => {
+        FbError.value = true;
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(errorCode, errorMessage);
+      });
+  } else {
+    FbError.value = true;
+  }
+}
 </script>
 
-<style scoped>
-.input {
-  @apply border-b border-gray-300 hover:border-gray-400 focus:border-gray-400 outline-none w-full m-7
-}
-</style>
+<style></style>

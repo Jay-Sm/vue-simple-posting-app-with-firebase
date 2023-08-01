@@ -4,7 +4,7 @@
 
 @layer components {
   #app {
-    @apply flex flex-row
+    @apply flex flex-row;
   }
 
   .nav-link-container {
@@ -17,8 +17,11 @@
   .input {
     @apply border-b border-gray-300 hover:border-gray-400 focus:border-gray-400 outline-none w-full m-7;
   }
+  /* .input.input-error {
+    @apply border-red-300 placeholder:text-red-400;
+  } */
 
   .outside-link {
-    @apply text-blue-500 hover:underline
+    @apply text-blue-500 hover:underline;
   }
 }

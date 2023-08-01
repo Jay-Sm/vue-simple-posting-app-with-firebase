@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  #app {
+    @apply flex flex-row
+  }
+
+  .nav-link-container {
+    @apply hover:bg-zinc-200 h-16 w-24 flex items-center justify-center;
+  }
+  .nav-link-container.no-hover {
+    @apply hover:bg-gray-100;
+  }
+
+  .input {
+    @apply border-b border-gray-300 hover:border-gray-400 focus:border-gray-400 outline-none w-full m-7;
+  }
+
+  .outside-link {
+    @apply text-blue-500 hover:underline
+  }
+}

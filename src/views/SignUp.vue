@@ -15,12 +15,9 @@
       </form>
     </div>
   </main>
-  <!-- <p class="mt-24 mr-10">
-    {{ password }}, {{ confirmPassword }}
-  </p> -->
-  <p v-if="auth.currentUser" class="mt-24 mr-10">
+  <!-- <p v-if="auth.currentUser" class="mt-24 mr-10">
     {{ auth.currentUser.displayName }}
-  </p>
+  </p> -->
 </template>
 
 <script setup>

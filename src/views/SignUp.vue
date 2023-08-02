@@ -10,8 +10,9 @@
         <input type="password" placeholder="Password*" v-model="password" class="input">
         <input type="password" placeholder="Confirm Password*" v-model="confirmPassword" class="input">
 
-        <button class="bg-blue-400 w-[5rem] px-2 py-1 rounded-sm text-white flex items-center justify-center">Sign
-          Up</button>
+        <button
+          class="bg-blue-400 w-[5rem] px-2 py-1 rounded-sm text-white flex items-center justify-center hover:opacity-70">
+          Sign Up</button>
       </form>
     </div>
   </main>
@@ -36,7 +37,7 @@ const FbError = ref(false)
 const router = useRouter();
 
 function FbSignUp() {
-  if (password.value === confirmPassword.value && password.value !== '' && confirmPassword.value !== '') {
+  if (password.value === confirmPassword.value && password.value !== '' && confirmPassword.value !== '' && !username.value.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)) {
     FbError.value = false;
 
     createUserWithEmailAndPassword(auth, email.value, password.value)

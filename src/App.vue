@@ -15,9 +15,14 @@
         </div>
       </div>
 
-      <div class="nav-link-container no-hover">
+      <div v-if="FbcurrentUser" class="nav-link-container no-hover">
+        <button @click="FbSignOut"
+          class="px-2 py-1 rounded-sm text-white h-1/2 w-11/12 flex items-center justify-center bg-red-500 hover:opacity-70">
+          SIGN OUT</button>
+      </div>
+      <div v-else class="nav-link-container no-hover">
         <router-link :to="{ name: 'sign-up' }"
-          class="bg-blue-400 px-2 py-1 rounded-sm text-white h-1/2 w-10/12 flex items-center justify-center">SIGN
+          class="px-2 py-1 rounded-sm text-white h-1/2 w-10/12 flex items-center justify-center bg-blue-400 hover:opacity-70">SIGN
           UP</router-link>
       </div>
 
@@ -34,13 +39,24 @@
 <script setup>
 import { ref } from 'vue'
 import { auth } from './firebase'
-import { onAuthStateChanged } from 'firebase/auth'
+import { useRouter } from 'vue-router';
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+
 
 const FbcurrentUser = ref(null)
+const router = useRouter();
 
 onAuthStateChanged(auth, user => {
   FbcurrentUser.value = user
 })
+
+function FbSignOut() {
+  signOut(auth)
+    .then(() => {
+      router.push({ name: 'feed' })
+    })
+
+}
 
 </script>
 

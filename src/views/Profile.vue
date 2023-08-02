@@ -7,21 +7,18 @@
 
       <div class="w-[20rem]">
         <h3 class="text-2xl font-semibold mt-6 ml-3">Mini Bio</h3>
-        <p class="ml-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, aspernatur deleniti! Voluptatibus
-          quisquam
-          soluta dignissimos ex rem quos quis, enim, quo quae rerum provident reprehenderit voluptatem esse. Dolorem,
-          porro id!</p>
+        <p class="ml-3">{{ bio }}</p>
       </div>
     </div>
     <div class="ml-8">
       <div>
         <h2 class="text-4xl font-semibold mb-2">User Info</h2>
-        <p>Username: user.displayName</p>
-        <p>Email: user.email</p>
+        <p>Username: {{ displayName }}</p>
+        <p>Email: {{ email }}</p>
 
         <div>
           <h2 class="text-2xl font-semibold mt-3">Intrests</h2>
-          <ul class="list-disc ml-6">
+          <ul v-if="intrests.length" class="list-disc ml-6">
             <li>intrest.1</li>
             <li>intrest.2</li>
             <li>intrest.3</li>
@@ -31,7 +28,7 @@
 
         <div>
           <h2 class="text-2xl font-semibold mt-3">Links</h2>
-          <ul>
+          <ul v-if="links.length">
             <li>
               <a href="https://www.youtube.com" target="_blank" class="outside-link">Youtube Chanel</a>
             </li>
@@ -154,6 +151,26 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { doc, getDoc } from "firebase/firestore";
+import { useRoute } from 'vue-router'
+import { db } from "../firebase";
+
+const route = useRoute()
+const docRef = doc(db, "users", route.params.uid);
+
+const displayName = ref('')
+const email = ref('')
+const bio = ref('')
+const intrests = ref([])
+const links = ref({})
+
+getDoc(docRef)
+  .then((docSnap) => {
+    displayName.value = docSnap.data().displayName
+    email.value = docSnap.data().email
+    bio.value = docSnap.data().bio
+  })
 
 </script>
 

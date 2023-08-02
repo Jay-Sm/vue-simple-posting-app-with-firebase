@@ -16,30 +16,41 @@
         <p>Username: {{ displayName }}</p>
         <p>Email: {{ email }}</p>
 
-        <div>
-          <h2 class="text-2xl font-semibold mt-3">Intrests</h2>
-          <ul v-if="intrests.length" class="list-disc ml-6">
-            <li>intrest.1</li>
-            <li>intrest.2</li>
-            <li>intrest.3</li>
-            <li>intrest.4</li>
-          </ul>
+        <div class="flex flex-row">
+          <div>
+            <h2 class="text-2xl font-semibold mt-3">Intrests</h2>
+            <ul v-if="intrests.length" class="list-disc ml-6">
+              <li v-for="intrest in intrests" :key="index">
+                {{ intrest }}
+              </li>
+            </ul>
+            <form @submit.prevent="addInterest">
+              <input type="text" placeholder="Add your interests " v-model="newInterest"
+                class="border-b border-gray-300 hover:border-gray-400 focus:border-gray-400 outline-none w-9/12 placeholder:text-sm">
+            </form>
+          </div>
         </div>
 
-        <div>
-          <h2 class="text-2xl font-semibold mt-3">Links</h2>
-          <ul v-if="links.length">
-            <li>
-              <a href="https://www.youtube.com" target="_blank" class="outside-link">Youtube Chanel</a>
-            </li>
-            <li>
-              <a href="https://www.twitter.com" target="_blank" class="outside-link">Twitter Profile</a>
-            </li>
-            <li>
-              <a href="https://www.github.com" target="_blank" class="outside-link">Github Profile</a>
-            </li>
-          </ul>
-        </div>
+        <!-- <div class="flex flex-row">
+          <div>
+            <h2 class="text-2xl font-semibold mt-3">Links</h2>
+            <ul v-if="links.length">
+              <li>
+                <a href="https://www.youtube.com" target="_blank" class="outside-link">Youtube Chanel</a>
+              </li>
+              <li>
+                <a href="https://www.twitter.com" target="_blank" class="outside-link">Twitter Profile</a>
+              </li>
+              <li>
+                <a href="https://www.github.com" target="_blank" class="outside-link">Github Profile</a>
+              </li>
+            </ul>
+            <form action="">
+              <input type="text" placeholder="Add your interests"
+                class="border-b border-gray-300 hover:border-gray-400 focus:border-gray-400 outline-none w-9/12 placeholder:text-sm">
+            </form>
+          </div>
+        </div> -->
       </div>
     </div>
   </main>
@@ -152,7 +163,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { doc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore";
 import { useRoute } from 'vue-router'
 import { db } from "../firebase";
 
@@ -165,12 +176,27 @@ const bio = ref('')
 const intrests = ref([])
 const links = ref({})
 
-getDoc(docRef)
-  .then((docSnap) => {
-    displayName.value = docSnap.data().displayName
-    email.value = docSnap.data().email
-    bio.value = docSnap.data().bio
+onSnapshot(docRef, (docSnap) => {
+
+  displayName.value = docSnap.data().displayName
+  email.value = docSnap.data().email
+  bio.value = docSnap.data().bio
+  intrests.value = docSnap.data().intrests
+});
+
+
+const newInterest = ref('')
+function addInterest() {
+  updateDoc(docRef, {
+    intrests: arrayUnion(newInterest.value)
   })
+
+  newInterest.value = ''
+}
+
+function addLink() {
+
+}
 
 </script>
 

@@ -22,7 +22,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import { auth } from '../firebase'
+import { useRouter } from 'vue-router';
+import { db, auth } from '../firebase'
+import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 
 
@@ -31,6 +33,7 @@ const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const FbError = ref(false)
+const router = useRouter();
 
 function FbSignUp() {
   if (password.value === confirmPassword.value && password.value !== '' && confirmPassword.value !== '') {
@@ -41,7 +44,16 @@ function FbSignUp() {
         updateProfile(userCredential.user, {
           displayName: username.value
         })
+
+        setDoc(doc(db, 'users', userCredential.user.uid), {
+          displayName: username.value,
+          email: email.value,
+          bio: 'Add your bio.'
+        });
+
+        router.push({ name: 'feed' })
       })
+
       .catch((error) => {
         FbError.value = true;
 
